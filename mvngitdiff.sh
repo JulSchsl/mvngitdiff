@@ -3,11 +3,11 @@
 mvngitdiff(){
 
     branch_or_commit="$1"
-    [ -z "$branch_or_commit" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return
+    [ -z "$branch_or_commit" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return 125
     shift
 
     goals="$*"
-    [ -z "$goals" ] && echo "Usage: mvngitdiff [one or more goals like install/build/clean]" && return
+    [ -z "$goals" ] && echo "Usage: mvngitdiff [one or more goals like install/build/clean]" && return 126
     
     changed_modules=($(git diff --name-only $branch_or_commit | grep --color=never -oP "\K\S*(?=(\/pom\.xml|\/src\/))" | uniq))
     unset branch_or_commit
@@ -22,13 +22,17 @@ mvngitdiff(){
     done
     unset changed_modules
 
+    ret_val=0
     if [ ${#existing_changed_modules[@]} -eq 0 ]; then
         echo "No changed (modified/deleted/added) files found in maven modules."
     else
         echo "Found changed files in the following modules: `printf "%s " "${existing_changed_modules[@]}"`"
         echo "Executing command: mvn $goals -amd -pl `printf "%s," "${existing_changed_modules[@]}"`"
         mvn $goals -amd -pl $(printf "%s," "${existing_changed_modules[@]}")
+        ret_val=$?
     fi
     unset existing_changed_modules
     unset goals
+
+    return $ret_val
 }
