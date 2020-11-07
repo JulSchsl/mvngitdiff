@@ -2,14 +2,16 @@
 
 mvngitdiff(){
 
-    branch="$1"
+    branch_or_commit="$1"
     [ -z "$branch" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return
     shift
 
     goals="$*"
     [ -z "$goals" ] && echo "Usage: mvngitdiff [one or more goals like install/build/clean]" && return
     
-    changed_modules=($(git diff --name-only $branch | grep --color=never -oP "\K\S*(?=(\/pom\.xml|\/src\/))" | uniq))
+    changed_modules=($(git diff --name-only $branch_or_commit | grep --color=never -oP "\K\S*(?=(\/pom\.xml|\/src\/))" | uniq))
+    unset branch_or_commit
+    
     existing_changed_modules=()
     for module in "${changed_modules[@]}"
     do
