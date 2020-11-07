@@ -1,4 +1,4 @@
-# mvngitchanges
+# mvngitdiff
 
 A shell script for Maven multi-module projects tracked with Git, which runs Maven commands selectively on changed modules.
 
@@ -6,11 +6,11 @@ Note that it will only catch up changes in sub-folders of the project which are 
 
 It has to be run from the project's root directory.
 
-## Example usage
+## Usage
 
-```
-mvn_git_changes clean install
-```
+```mvngitdiff <branch or commit> <one or more goals like install/build/clean>```
+
+Example: ```mvngitdiff master clean install```
 
 ## Installation
 

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-mvn_git_changes(){
+mvngitdiff(){
 
     branch="$1"
-    [ -z "$branch" ] && echo "Usage: mvn_git_changes <branch or commit> <one or more goals like install/build/clean>" && return
+    [ -z "$branch" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return
     shift
 
     goals="$*"
-    [ -z "$goals" ] && echo "Usage: mvn_git_changes [one or more goals like install/build/clean]" && return
+    [ -z "$goals" ] && echo "Usage: mvngitdiff [one or more goals like install/build/clean]" && return
     
     changed_modules=($(git diff --name-only $branch | grep --color=never -oP "\K\S*(?=(\/pom\.xml|\/src\/))" | uniq))
     existing_changed_modules=()
