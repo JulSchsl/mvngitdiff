@@ -3,7 +3,7 @@
 mvngitdiff(){
 
     branch_or_commit="$1"
-    [ -z "$branch" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return
+    [ -z "$branch_or_commit" ] && echo "Usage: mvngitdiff <branch or commit> <one or more goals like install/build/clean>" && return
     shift
 
     goals="$*"
