@@ -13,7 +13,8 @@ mvngitdiff(){
     existing_changed_modules=()
     for module in "${changed_modules[@]}"
     do
-        if [[ -d "$module" ]]; then
+        # use only modules for which a directory of the same name exists and which are listed as modules in the pom.xml
+        if [[ -d "$module" ]] && grep -q "<module>$module</module>" pom.xml; then
             existing_changed_modules+=("$module")
         fi
     done
@@ -22,7 +23,7 @@ mvngitdiff(){
     if [ ${#existing_changed_modules[@]} -eq 0 ]; then
         echo "No changed (modified/deleted/added) files found in maven modules."
     else
-        echo "Found changed files in modules: `printf "%s " "${existing_changed_modules[@]}"`"
+        echo "Found changed files in the following modules: `printf "%s " "${existing_changed_modules[@]}"`"
         echo "Executing command: mvn $goals -amd -pl `printf "%s," "${existing_changed_modules[@]}"`"
         mvn $goals -amd -pl $(printf "%s," "${existing_changed_modules[@]}")
     fi
